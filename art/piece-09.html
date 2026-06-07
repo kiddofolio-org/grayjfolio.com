@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Untitled No. 9 — Gray J.</title>
+  <meta name="description" content="Untitled No. 9 by Gray J." />
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml" />
+  <script>
+    (function () {
+      try {
+        var t = window["local" + "Storage"].getItem("gray-theme");
+        if (t === "dark") document.documentElement.setAttribute("data-theme", "dark");
+      } catch (e) {}
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav">
+      <a class="brand" href="../index.html">Gray J.</a>
+      <div class="nav-links">
+        <a href="../index.html#art">Art</a>
+        <a href="../index.html#contact">Contact</a>
+        <button class="theme-toggle" type="button" aria-label="Toggle theme">&#9790;</button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="detail">
+      <div class="wrap">
+        <a class="back-link" href="../index.html#art">&larr; Back to the gallery</a>
+
+        <div class="placard">
+          <div class="placard-frame">
+            <div class="art-window" style="width:520px;max-width:100%;aspect-ratio:4/3;"><span class="placeholder">Untitled No. 9</span></div>
+          </div>
+
+          <div class="wall-label">
+            <h1>Untitled No. 9</h1>
+            <p class="placard-meta">Gray J. &middot; 2024 &middot; <em>Mixed media</em></p>
+            
+          </div>
+        </div>
+
+        <nav class="pager">
+          <a class="prev" href="piece-08.html"><span class="pager-dir">Newer</span>Untitled No. 8</a>
+          <a class="next" href="piece-10.html"><span class="pager-dir">Older</span>Untitled No. 10</a>
+        </nav>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>&copy; <span id="year"></span> Gray J. &middot; Last updated: 2026-06-07</p>
+  </footer>
+
+  <script src="../js/theme.js"></script>
+  <script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+</body>
+</html>
