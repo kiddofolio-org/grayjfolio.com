@@ -90,7 +90,7 @@ a:hover { color: var(--accent-soft); }
   margin: 0 auto;
 }
 .brand {
-  font-family: var(--serif);
+  font-family: var(--display);
   font-weight: 600;
   font-size: 1.25rem;
   letter-spacing: 0.01em;
