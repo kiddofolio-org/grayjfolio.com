@@ -1,27 +1,34 @@
 #!/usr/bin/env python3
-"""Generate museum-placard art detail pages for grayjfolio.com.
-Each page links prev/next in archive order (newest first)."""
+"""Generate museum-placard art detail pages AND the index art grid for grayjfolio.com.
+Single source of truth: the PIECES list below (archive order, newest first)."""
 import os
 
-ART_DIR = os.path.join(os.path.dirname(__file__), "art")
+ROOT = os.path.dirname(__file__)
+ART_DIR = os.path.join(ROOT, "art")
 os.makedirs(ART_DIR, exist_ok=True)
 
-# Archive order, newest first. Placeholder data for now.
-# When real (anonymized) art arrives, swap title/medium/year/image/description.
+LAST_UPDATED = "2026-06-07"
+YEAR_GROUP = "2024\u201325"
+
+# Archive order, NEWEST FIRST. One dict per artwork.
+#   slug      -> base name; images are assets/<slug>-full.jpg / -thumb.jpg
+#   title     -> display title
+#   date      -> human label (year, or Mon YYYY)
+#   medium    -> medium label
 PIECES = [
-    {"slug": "piece-01", "title": "Untitled No.\u00a01",  "year": "2024", "medium": "Mixed media", "desc": ""},
-    {"slug": "piece-02", "title": "Untitled No.\u00a02",  "year": "2024", "medium": "Mixed media", "desc": ""},
-    {"slug": "piece-03", "title": "Untitled No.\u00a03",  "year": "2024", "medium": "Mixed media", "desc": ""},
-    {"slug": "piece-04", "title": "Untitled No.\u00a04",  "year": "2024", "medium": "Mixed media", "desc": ""},
-    {"slug": "piece-05", "title": "Untitled No.\u00a05",  "year": "2024", "medium": "Mixed media", "desc": ""},
-    {"slug": "piece-06", "title": "Untitled No.\u00a06",  "year": "2024", "medium": "Mixed media", "desc": ""},
-    {"slug": "piece-07", "title": "Untitled No.\u00a07",  "year": "2024", "medium": "Mixed media", "desc": ""},
-    {"slug": "piece-08", "title": "Untitled No.\u00a08",  "year": "2024", "medium": "Mixed media", "desc": ""},
-    {"slug": "piece-09", "title": "Untitled No.\u00a09",  "year": "2024", "medium": "Mixed media", "desc": ""},
-    {"slug": "piece-10", "title": "Untitled No.\u00a010", "year": "2024", "medium": "Mixed media", "desc": ""},
-    {"slug": "piece-11", "title": "Untitled No.\u00a011", "year": "2024", "medium": "Mixed media", "desc": ""},
+    {"slug": "gray-01", "title": "Confetti",            "date": "2024",      "medium": "Tempera prints"},
+    {"slug": "gray-02", "title": "Night Garden",        "date": "2024",      "medium": "Chalk pastel on black paper"},
+    {"slug": "gray-03", "title": "Pink Bloom",          "date": "2024",      "medium": "Tempera on green paper"},
+    {"slug": "gray-04", "title": "Driftwood",           "date": "2024",      "medium": "Tempera"},
+    {"slug": "gray-05", "title": "Blue Weather",        "date": "2024",      "medium": "Crayon & colored pencil"},
+    {"slug": "gray-06", "title": "Raspberry",           "date": "2024",      "medium": "Tempera"},
+    {"slug": "gray-07", "title": "First Smile",         "date": "Aug 2024",  "medium": "Crayon"},
+    {"slug": "gray-08", "title": "Two Lines for Mommy", "date": "Aug 2024",  "medium": "Crayon"},
+    {"slug": "gray-09", "title": "For Mom",             "date": "Jul 2024",  "medium": "Crayon"},
+    {"slug": "gray-10", "title": "Green & Black",       "date": "Feb 2024",  "medium": "Marker & crayon"},
 ]
 
+# ---------------------------------------------------------------- detail pages
 PAGE = """<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -62,13 +69,12 @@ PAGE = """<!DOCTYPE html>
 
         <div class="placard">
           <div class="placard-frame">
-            {image}
+            <img src="../assets/{slug}-full.jpg" alt="{title} by Gray J." />
           </div>
 
           <div class="wall-label">
             <h1>{title}</h1>
-            <p class="placard-meta">Gray J. &middot; {year} &middot; <em>{medium}</em></p>
-            {desc_html}
+            <p class="placard-meta">Gray J. &middot; {date} &middot; <em>{medium}</em></p>
           </div>
         </div>
 
@@ -81,7 +87,7 @@ PAGE = """<!DOCTYPE html>
   </main>
 
   <footer class="site-footer">
-    <p>&copy; <span id="year"></span> Gray J. &middot; Last updated: 2026-06-07</p>
+    <p>&copy; <span id="year"></span> Gray J. &middot; Last updated: {updated}</p>
   </footer>
 
   <script src="../js/theme.js"></script>
@@ -89,11 +95,6 @@ PAGE = """<!DOCTYPE html>
 </body>
 </html>
 """
-
-PLACEHOLDER_IMG = (
-    '<div class="art-window" style="width:520px;max-width:100%;aspect-ratio:4/3;">'
-    '<span class="placeholder">{label}</span></div>'
-)
 
 for i, p in enumerate(PIECES):
     prev_p = PIECES[i - 1] if i > 0 else None
@@ -115,24 +116,53 @@ for i, p in enumerate(PIECES):
     else:
         next_html = '<span class="next disabled"></span>'
 
-    desc_html = f'<p class="description">{p["desc"]}</p>' if p["desc"] else ""
-
-    # Placeholder image window; swap to <img> when real art arrives.
-    image = PLACEHOLDER_IMG.format(label=p["title"])
-
     html = PAGE.format(
-        title=p["title"],
-        year=p["year"],
-        medium=p["medium"],
-        desc_html=desc_html,
-        image=image,
-        prev_html=prev_html,
-        next_html=next_html,
+        title=p["title"], date=p["date"], medium=p["medium"], slug=p["slug"],
+        prev_html=prev_html, next_html=next_html, updated=LAST_UPDATED,
     )
-
     out = os.path.join(ART_DIR, f'{p["slug"]}.html')
     with open(out, "w", encoding="utf-8") as f:
         f.write(html)
-    print("wrote", out)
 
-print(f"\nGenerated {len(PIECES)} art detail pages.")
+# Clean up any old placeholder pages (piece-XX.html)
+for f in os.listdir(ART_DIR):
+    if f.startswith("piece-") and f.endswith(".html"):
+        os.remove(os.path.join(ART_DIR, f))
+
+# ---------------------------------------------------------------- index grid
+cards = []
+for p in PIECES:
+    cards.append(
+        f'''            <a class="art-card" href="art/{p["slug"]}.html">
+              <div class="frame"><div class="art-window"><img src="assets/{p["slug"]}-thumb.jpg" alt="{p["title"]} by Gray J." loading="lazy" /></div></div>
+              <div class="art-label"><p class="title">{p["title"]}</p><p class="meta">{p["date"]} &middot; {p["medium"]}</p></div>
+            </a>'''
+    )
+grid_html = "\n\n".join(cards)
+
+GRID_BLOCK = f'''        <!-- Year group: {YEAR_GROUP} -->
+        <div class="year-group">
+          <p class="year-label"><span>{YEAR_GROUP}</span></p>
+          <div class="art-grid">
+
+{grid_html}
+
+          </div>
+        </div>'''
+
+# Rewrite the index grid between markers.
+index_path = os.path.join(ROOT, "index.html")
+with open(index_path, "r", encoding="utf-8") as f:
+    idx = f.read()
+
+import re
+pattern = re.compile(r"        <!-- Year group:.*?</div>\n        </div>", re.DOTALL)
+idx_new = pattern.sub(GRID_BLOCK, idx, count=1)
+
+# Update last-updated date in footer
+idx_new = re.sub(r"Last updated: \d{4}-\d{2}-\d{2}", f"Last updated: {LAST_UPDATED}", idx_new)
+
+with open(index_path, "w", encoding="utf-8") as f:
+    f.write(idx_new)
+
+print(f"Generated {len(PIECES)} detail pages + rebuilt index grid. Last updated {LAST_UPDATED}.")
