@@ -28,7 +28,6 @@ GROUPS = [
             {"slug": "gray-16", "title": "Pink Jellyfish",  "date": "2025", "medium": "Marker"},
             {"slug": "gray-19", "title": "Desert Racer",    "date": "2025", "medium": "Crayon on coloring page"},
             {"slug": "gray-23", "title": "Yellow Field",    "date": "2025", "medium": "Marker on yellow paper"},
-            {"slug": "gray-12", "title": "Loop Garden",     "date": "2025", "medium": "Marker"},
             {"slug": "gray-29", "title": "Bubbles",         "date": "2025", "medium": "Marker"},
             {"slug": "gray-28", "title": "Sunburst Face",   "date": "2025", "medium": "Marker"},
             {"slug": "gray-15", "title": "Green Letters",   "date": "2025", "medium": "Marker"},
