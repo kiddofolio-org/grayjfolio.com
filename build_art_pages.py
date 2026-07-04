@@ -162,12 +162,16 @@ for f in os.listdir(ART_DIR):
         os.remove(os.path.join(ART_DIR, f))
 
 # ---------------------------------------------------------------- index grid
+# Slugs whose full artwork should show inside the card window without cropping.
+FIT_CONTAIN = {"gray-17", "gray-21"}
+
 def render_group(group):
     cards = []
     for p in group["pieces"]:
+        window_cls = "art-window fit-contain" if p["slug"] in FIT_CONTAIN else "art-window"
         cards.append(
             f'''            <a class="art-card" href="art/{p["slug"]}.html">
-              <div class="frame"><div class="art-window"><img src="assets/{p["slug"]}-thumb.jpg" alt="{p["title"]} by Gray J." loading="lazy" /></div></div>
+              <div class="frame"><div class="{window_cls}"><img src="assets/{p["slug"]}-thumb.jpg" alt="{p["title"]} by Gray J." loading="lazy" /></div></div>
               <div class="art-label"><p class="title">{p["title"]}</p><p class="meta">{p["medium"]}</p></div>
             </a>'''
         )
