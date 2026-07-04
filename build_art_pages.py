@@ -111,7 +111,7 @@ PAGE = """<!DOCTYPE html>
 
           <div class="wall-label">
             <h1>{title}</h1>
-            <p class="placard-meta">Gray J. &middot; {date} &middot; <em>{medium}</em></p>
+            <p class="placard-meta">Gray J. &middot; <em>{medium}</em></p>
           </div>
         </div>
 
@@ -172,7 +172,7 @@ def render_group(group):
         cards.append(
             f'''            <a class="art-card" href="art/{p["slug"]}.html">
               <div class="frame"><div class="art-window"><img src="assets/{p["slug"]}-thumb.jpg" alt="{p["title"]} by Gray J." loading="lazy" /></div></div>
-              <div class="art-label"><p class="title">{p["title"]}</p><p class="meta">{p["date"]} &middot; {p["medium"]}</p></div>
+              <div class="art-label"><p class="title">{p["title"]}</p><p class="meta">{p["medium"]}</p></div>
             </a>'''
         )
     grid_html = "\n\n".join(cards)
