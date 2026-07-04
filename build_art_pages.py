@@ -49,7 +49,6 @@ GROUPS = [
             {"slug": "gray-04", "title": "Driftwood",           "date": "2024",     "medium": "Tempera"},
             {"slug": "gray-05", "title": "Blue Weather",        "date": "2024",     "medium": "Crayon & colored pencil"},
             {"slug": "gray-06", "title": "Raspberry",           "date": "2024",     "medium": "Tempera"},
-            {"slug": "gray-07", "title": "First Smile",         "date": "Aug 2024", "medium": "Crayon"},
             {"slug": "gray-08", "title": "Two Lines for Mommy", "date": "Aug 2024", "medium": "Crayon"},
             {"slug": "gray-09", "title": "For Mom",             "date": "Jul 2024", "medium": "Crayon"},
             {"slug": "gray-10", "title": "Green & Black",       "date": "Feb 2024", "medium": "Marker & crayon"},
