@@ -9,7 +9,7 @@ ROOT = os.path.dirname(__file__)
 ART_DIR = os.path.join(ROOT, "art")
 os.makedirs(ART_DIR, exist_ok=True)
 
-LAST_UPDATED = "2026-07-04"
+LAST_UPDATED = "2026-07-04"  # updated 2026-07-04
 
 # School-year groups, NEWEST YEAR FIRST. Within each group, NEWEST FIRST.
 #   slug   -> base name; images are assets/<slug>-full.jpg / -thumb.jpg
@@ -20,24 +20,20 @@ GROUPS = [
     {
         "year": "2025\u201326",
         "pieces": [
+            {"slug": "gray-30", "title": "Profile",         "date": "2025", "medium": "Pencil on peach paper"},
+            {"slug": "gray-14", "title": "Green Hand",      "date": "2025", "medium": "Marker"},
             {"slug": "gray-26", "title": "Three Hearts",    "date": "2025", "medium": "Marker"},
             {"slug": "gray-17", "title": "Big Face",        "date": "2025", "medium": "Marker"},
             {"slug": "gray-11", "title": "Purple Storm",    "date": "2025", "medium": "Marker & colored pencil"},
             {"slug": "gray-23", "title": "Yellow Field",    "date": "2025", "medium": "Marker on yellow paper"},
             {"slug": "gray-16", "title": "Pink Jellyfish",  "date": "2025", "medium": "Marker"},
             {"slug": "gray-19", "title": "Desert Racer",    "date": "2025", "medium": "Crayon on coloring page"},
-            {"slug": "gray-14", "title": "Green Hand",      "date": "2025", "medium": "Marker"},
             {"slug": "gray-12", "title": "Loop Garden",     "date": "2025", "medium": "Marker"},
             {"slug": "gray-29", "title": "Bubbles",         "date": "2025", "medium": "Marker"},
-            {"slug": "gray-24", "title": "Waving Hand",     "date": "2025", "medium": "Marker"},
-            {"slug": "gray-13", "title": "Orange Tangle",   "date": "2025", "medium": "Marker"},
-            {"slug": "gray-33", "title": "Color Riot",      "date": "2025", "medium": "Marker & crayon"},
             {"slug": "gray-28", "title": "Sunburst Face",   "date": "2025", "medium": "Marker"},
             {"slug": "gray-15", "title": "Green Letters",   "date": "2025", "medium": "Marker"},
             {"slug": "gray-22", "title": "Rain and Sun",    "date": "2025", "medium": "Marker"},
             {"slug": "gray-18", "title": "Four Flowers",    "date": "2025", "medium": "Crayon"},
-            {"slug": "gray-27", "title": "Black Knot",      "date": "2025", "medium": "Brush marker on cut paper"},
-            {"slug": "gray-30", "title": "Profile",         "date": "2025", "medium": "Pencil on peach paper"},
             {"slug": "gray-32", "title": "Rainbow Creature","date": "2025", "medium": "Crayon"},
             {"slug": "gray-31", "title": "Blue Blizzard",   "date": "2025", "medium": "Crayon"},
             {"slug": "gray-21", "title": "Sun and Friends", "date": "2025", "medium": "Marker"},
