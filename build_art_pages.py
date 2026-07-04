@@ -5,9 +5,30 @@ within each group, newest first)."""
 import os
 import re
 
+try:
+    from PIL import Image
+except ImportError:
+    Image = None
+
 ROOT = os.path.dirname(__file__)
 ART_DIR = os.path.join(ROOT, "art")
+ASSETS_DIR = os.path.join(ROOT, "assets")
 os.makedirs(ART_DIR, exist_ok=True)
+
+
+def is_portrait(slug):
+    """True if the piece's thumbnail is taller than it is wide (vertical orientation).
+    Vertical pieces get 'fit-contain' so the whole artwork shows in the card (no crop)."""
+    if Image is None:
+        return False
+    path = os.path.join(ASSETS_DIR, f"{slug}-thumb.jpg")
+    if not os.path.exists(path):
+        return False
+    try:
+        w, h = Image.open(path).size
+        return h > w
+    except Exception:
+        return False
 
 LAST_UPDATED = "2026-07-04"  # updated 2026-07-04
 
@@ -160,13 +181,11 @@ for f in os.listdir(ART_DIR):
         os.remove(os.path.join(ART_DIR, f))
 
 # ---------------------------------------------------------------- index grid
-# Slugs whose full artwork should show inside the card window without cropping.
-FIT_CONTAIN = {"gray-17", "gray-21"}
-
 def render_group(group):
     cards = []
     for p in group["pieces"]:
-        window_cls = "art-window fit-contain" if p["slug"] in FIT_CONTAIN else "art-window"
+        # Any vertical (portrait) image is shown uncropped inside the card window.
+        window_cls = "art-window fit-contain" if is_portrait(p["slug"]) else "art-window"
         cards.append(
             f'''            <a class="art-card" href="art/{p["slug"]}.html">
               <div class="frame"><div class="{window_cls}"><img src="assets/{p["slug"]}-thumb.jpg" alt="{p["title"]} by Gray J." loading="lazy" /></div></div>
