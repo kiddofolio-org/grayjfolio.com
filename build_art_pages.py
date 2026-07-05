@@ -41,6 +41,7 @@ GROUPS = [
     {
         "year": "2025\u201326",
         "pieces": [
+            {"slug": "gray-36", "title": "Two Hands",        "date": "2025", "medium": "Marker on cut paper"},
             {"slug": "gray-34", "title": "Campfire Hands",   "date": "2025", "medium": "Handprint & cut paper"},
             {"slug": "gray-35", "title": "Red King",         "date": "2025", "medium": "Crayon"},
             {"slug": "gray-30", "title": "Profile",         "date": "2025", "medium": "Pencil on peach paper"},
