@@ -4,6 +4,7 @@ Single source of truth: the GROUPS list below (school-year groups, newest year f
 within each group, newest first)."""
 import os
 import re
+import html as _html
 
 try:
     from PIL import Image
@@ -14,6 +15,18 @@ ROOT = os.path.dirname(__file__)
 ART_DIR = os.path.join(ROOT, "art")
 ASSETS_DIR = os.path.join(ROOT, "assets")
 os.makedirs(ART_DIR, exist_ok=True)
+
+# Canonical site origin (no trailing slash) used for absolute URLs in SEO tags.
+SITE_URL = "https://grayjfolio.com"
+SITE_NAME = "Gray J. — Art"
+SITE_TAGLINE = "A curated portfolio of preschool artwork by Gray J."
+# Default social-share image (used on the homepage and as a fallback).
+DEFAULT_OG_IMAGE = f"{SITE_URL}/assets/gray-36-full.jpg"
+
+
+def esc(s):
+    """Escape a string for safe use inside an HTML attribute."""
+    return _html.escape(str(s), quote=True)
 
 
 def is_portrait(slug):
@@ -30,7 +43,7 @@ def is_portrait(slug):
     except Exception:
         return False
 
-LAST_UPDATED = "2026-07-05"  # updated 2026-07-05
+LAST_UPDATED = "2026-07-08"  # updated 2026-07-08
 
 # School-year groups, NEWEST YEAR FIRST. Within each group, NEWEST FIRST.
 #   slug   -> base name; images are assets/<slug>-full.jpg / -thumb.jpg
@@ -89,8 +102,32 @@ PAGE = """<!DOCTYPE html>
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>{title} — Gray J.</title>
-  <meta name="description" content="{title} by Gray J." />
+  <title>{title} — Gray J. Art</title>
+  <meta name="description" content="{meta_desc}" />
+  <meta name="author" content="Gray J." />
+  <meta name="theme-color" content="#c4622d" />
+  <link rel="canonical" href="{page_url}" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="Gray J. — Art" />
+  <meta property="og:title" content="{title} — Gray J. Art" />
+  <meta property="og:description" content="{meta_desc}" />
+  <meta property="og:url" content="{page_url}" />
+  <meta property="og:image" content="{img_url}" />
+  <meta property="og:image:alt" content="{title} by Gray J." />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="{title} — Gray J. Art" />
+  <meta name="twitter:description" content="{meta_desc}" />
+  <meta name="twitter:image" content="{img_url}" />
+
+  <!-- Structured data: this artwork -->
+  <script type="application/ld+json">
+  {{"@context":"https://schema.org","@type":"VisualArtwork","name":"{title}","creator":{{"@type":"Person","name":"Gray J."}},"artMedium":"{medium}","artform":"Children's art","url":"{page_url}","image":"{img_url}","isPartOf":{{"@type":"CollectionPage","name":"Gray J. — Art","url":"{site_url}/"}}}}
+  </script>
+
   <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml" />
   <script>
     (function () {{
@@ -171,9 +208,14 @@ for i, p in enumerate(FLAT):
     else:
         next_html = '<span class="next disabled"></span>'
 
+    page_url = f'{SITE_URL}/art/{p["slug"]}.html'
+    img_url = f'{SITE_URL}/assets/{p["slug"]}-full.jpg'
+    meta_desc = f'{p["title"]} — {p["medium"]} artwork by Gray J., part of a curated portfolio of preschool art.'
+
     html = PAGE.format(
-        title=p["title"], date=p["date"], medium=p["medium"], slug=p["slug"],
+        title=esc(p["title"]), date=esc(p["date"]), medium=esc(p["medium"]), slug=p["slug"],
         prev_html=prev_html, next_html=next_html, updated=LAST_UPDATED,
+        page_url=page_url, img_url=img_url, meta_desc=esc(meta_desc), site_url=SITE_URL,
     )
     with open(os.path.join(ART_DIR, f'{p["slug"]}.html'), "w", encoding="utf-8") as f:
         f.write(html)
@@ -229,7 +271,62 @@ else:
 # Update last-updated date in footer
 idx_new = re.sub(r"Last updated: \d{4}-\d{2}-\d{2}", f"Last updated: {LAST_UPDATED}", idx_new)
 
+# Keep the homepage's newest-piece social image + gallery structured data in sync.
+newest = FLAT[0]["slug"] if FLAT else "gray-36"
+newest_img = f"{SITE_URL}/assets/{newest}-full.jpg"
+idx_new = re.sub(
+    r'(<meta property="og:image" content=")[^"]*(" />)',
+    lambda m: m.group(1) + newest_img + m.group(2), idx_new, count=1)
+idx_new = re.sub(
+    r'(<meta name="twitter:image" content=")[^"]*(" />)',
+    lambda m: m.group(1) + newest_img + m.group(2), idx_new, count=1)
+
+# Build an ImageGallery JSON-LD block listing every piece, injected before </head>.
+gallery_items = ", ".join(
+    '{{"@type":"ImageObject","name":"{name}","contentUrl":"{url}","creator":{{"@type":"Person","name":"Gray J."}}}}'.format(
+        name=esc(p["title"]).replace('"', '\\"'),
+        url=f'{SITE_URL}/assets/{p["slug"]}-full.jpg')
+    for p in FLAT)
+gallery_ld = (
+    '  <!-- Structured data: full gallery (auto-generated) -->\n'
+    '  <script type="application/ld+json">\n'
+    '  {"@context":"https://schema.org","@type":"ImageGallery",'
+    '"name":"Gray J. \u2014 Art","url":"' + SITE_URL + '/",'
+    '"image":[' + gallery_items + ']}\n'
+    '  </script>\n'
+)
+# Remove any prior auto-generated gallery block, then insert a fresh one before </head>.
+idx_new = re.sub(
+    r'  <!-- Structured data: full gallery \(auto-generated\) -->.*?</script>\n',
+    "", idx_new, flags=re.DOTALL)
+idx_new = idx_new.replace("</head>", gallery_ld + "</head>", 1)
+
 with open(index_path, "w", encoding="utf-8") as f:
     f.write(idx_new)
 
-print(f"Generated {len(FLAT)} detail pages across {len(GROUPS)} year groups + rebuilt index. Last updated {LAST_UPDATED}.")
+# ---------------------------------------------------------------- robots + sitemap
+robots = (
+    "User-agent: *\n"
+    "Allow: /\n\n"
+    f"Sitemap: {SITE_URL}/sitemap.xml\n"
+)
+with open(os.path.join(ROOT, "robots.txt"), "w", encoding="utf-8") as f:
+    f.write(robots)
+
+urls = [f"{SITE_URL}/"] + [f'{SITE_URL}/art/{p["slug"]}.html' for p in FLAT]
+sitemap_entries = "\n".join(
+    f"  <url>\n    <loc>{u}</loc>\n    <lastmod>{LAST_UPDATED}</lastmod>\n"
+    f"    <changefreq>monthly</changefreq>\n  </url>"
+    for u in urls
+)
+sitemap = (
+    '<?xml version="1.0" encoding="UTF-8"?>\n'
+    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+    f"{sitemap_entries}\n"
+    "</urlset>\n"
+)
+with open(os.path.join(ROOT, "sitemap.xml"), "w", encoding="utf-8") as f:
+    f.write(sitemap)
+
+print(f"Generated {len(FLAT)} detail pages across {len(GROUPS)} year groups + rebuilt index.")
+print(f"Wrote robots.txt and sitemap.xml ({len(urls)} URLs). Last updated {LAST_UPDATED}.")
