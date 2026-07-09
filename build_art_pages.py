@@ -43,7 +43,7 @@ def is_portrait(slug):
     except Exception:
         return False
 
-LAST_UPDATED = "2026-07-08"  # updated 2026-07-08
+LAST_UPDATED = "2026-07-09"  # updated 2026-07-09
 
 # School-year groups, NEWEST YEAR FIRST. Within each group, NEWEST FIRST.
 #   slug   -> base name; images are assets/<slug>-full.jpg / -thumb.jpg
@@ -179,7 +179,7 @@ PAGE = """<!DOCTYPE html>
   </main>
 
   <footer class="site-footer">
-    <p>&copy; <span id="year"></span> Gray J. &middot; Last updated: {updated}</p>
+    <p>&copy; <span id="year"></span> Gray J. &middot; Made with <a class="credit-link" href="https://kiddofolio.com" target="_blank" rel="noopener">Kiddofolio</a> &middot; Last updated: {updated}</p>
   </footer>
 
   <script src="../js/theme.js"></script>
