@@ -43,7 +43,7 @@ def is_portrait(slug):
     except Exception:
         return False
 
-LAST_UPDATED = "2026-07-09"  # updated 2026-07-09
+LAST_UPDATED = "2026-08-03"  # updated 2026-08-03
 
 # School-year groups, NEWEST YEAR FIRST. Within each group, NEWEST FIRST.
 #   slug   -> base name; images are assets/<slug>-full.jpg / -thumb.jpg
@@ -54,6 +54,9 @@ GROUPS = [
     {
         "year": "2025\u201326",
         "pieces": [
+            {"slug": "gray-37", "title": "St. Simons at Night",      "date": "Jul 2026", "medium": "Acrylic on paper"},
+            {"slug": "gray-38", "title": "Abstract Family Portrait", "date": "Jul 2026", "medium": "Acrylic on canvas"},
+            {"slug": "gray-39", "title": "Orange Waves",             "date": "Jun 2026", "medium": "Colored pencil on orange paper"},
             {"slug": "gray-36", "title": "Two Hands",        "date": "2025", "medium": "Marker on cut paper"},
             {"slug": "gray-34", "title": "Campfire Hands",   "date": "2025", "medium": "Handprint & cut paper"},
             {"slug": "gray-35", "title": "Red King",         "date": "2025", "medium": "Crayon"},
